@@ -1,51 +1,71 @@
 #include "color-me.h"
 #include <stdio.h>
 
-struct colors {
-  const char *red;
-  const char *blue;
-  const char *green;
-  const char *yellow;
-  const char *magenta;
-  const char *reset;
+static const char *COLOR_FORE_STR[] = {
+    // Normal colors
+    [black] = "\033[30m",   /* black   ->  foreground  */
+    [red] = "\033[31m",     /* red     ->  foreground  */
+    [green] = "\033[32m",   /* green   ->  foreground  */
+    [yellow] = "\033[33m",  /* yellow  ->  foreground  */
+    [blue] = "\033[34m",    /* blue    ->  foreground  */
+    [magenta] = "\033[35m", /* magenta ->  foreground  */
+    [cyan] = "\033[36m",    /* cyan    ->  foreground  */
+    [white] = "\033[37m",   /* white   ->  foreground  */
+
+    // Bright colors
+    [black_bright] = "\033[90m",   /* black   ->  foreground  */
+    [red_bright] = "\033[91m",     /* red     ->  foreground  */
+    [green_bright] = "\033[92m",   /* green   ->  foreground  */
+    [yellow_bright] = "\033[93m",  /* yellow  ->  foreground  */
+    [blue_bright] = "\033[94m",    /* blue    ->  foreground  */
+    [magenta_bright] = "\033[95m", /* magenta ->  foreground  */
+    [cyan_bright] = "\033[96m",    /* cyan    ->  foreground  */
+    [white_bright] = "\033[97m",   /* white   ->  foreground  */
+};
+static const char *COLOR_BACK_STR[] = {
+    // Normal colors
+    [black] = "\033[40m",   /* black   ->  background  */
+    [red] = "\033[41m",     /* red     ->  background  */
+    [green] = "\033[42m",   /* green   ->  background  */
+    [yellow] = "\033[43m",  /* yellow  ->  background  */
+    [blue] = "\033[44m",    /* blue    ->  background  */
+    [magenta] = "\033[45m", /* magenta ->  background  */
+    [cyan] = "\033[46m",    /* cyan    ->  background  */
+    [white] = "\033[47m",   /* white   ->  background  */
+
+    // Bright colors
+    [black_bright] = "\033[100m",   /* black   ->  background  */
+    [red_bright] = "\033[101m",     /* red     ->  background  */
+    [green_bright] = "\033[102m",   /* green   ->  background  */
+    [yellow_bright] = "\033[103m",  /* yellow  ->  background  */
+    [blue_bright] = "\033[104m",    /* blue    ->  background  */
+    [magenta_bright] = "\033[105m", /* magenta ->  background  */
+    [cyan_bright] = "\033[106m",    /* cyan    ->  background  */
+    [white_bright] = "\033[107m",   /* white   ->  background  */
 };
 
-static struct colors colors = {
-    "\033[31m", /* red     */
-    "\033[34m", /* blue    */
-    "\033[32m", /* green   */
-    "\033[33m", /* yellow  */
-    "\033[35m", /* magenta */
-    "\033[0m",  /* reset   */
+static const char *OUTPUT_POSITION[] = {
+    [fore] = "fore",
+    [back] = "back",
 };
 
-const char *color_me(color color, output position) {
+const char *color_me(colors color, output position) {
   static _Thread_local char buf[64];
-  snprintf(buf, sizeof(buf), "hi");
+
+  if (position == back) {
+    const char *ansi_code = COLOR_BACK_STR[color];
+    snprintf(buf, sizeof(buf), "%s", ansi_code);
+  } else {
+    const char *ansi_code = COLOR_FORE_STR[color];
+    snprintf(buf, sizeof(buf), "%s", ansi_code);
+  }
 
   return buf;
 };
 
-#define COLOR_ME_1(color) color_me(color, "fore")
+#define COLOR_ME_1(color) color_me(color, fore)
 #define COLOR_ME_2(color, position) color_me(color, position)
-// #define COLOR_ME_3(color, position, brightness)                                \
-  color_me(color, position, brightness)
 
 #define GET_MACRO(_1, _2, NAME, ...) NAME
 #define color_me(...)                                                          \
   GET_MACRO(__VA_ARGS__, COLOR_ME_2, COLOR_ME_1)(__VA_ARGS__)
-
-int main() {
-  // const struct colors *colorsPtr = &color_me;
-  MAX_BUFFER_SIZE;
-
-  // color_me(color "", output "")
-  // color -> char array (char*) -> ASCII color name to use
-  // output -> char array (char*) -> output position of the color
-  // fore(foreground) or back (background)
-  //
-  // luminous -> char array (char*) -> color
-  // should be bright (neon) or normal
-  printf("%s color-me\n", color_me("red"));
-  return 0;
-}
