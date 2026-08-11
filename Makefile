@@ -9,7 +9,7 @@ LIB_SRC       := src
 LIB_SRC_FILES := $(LIB_SRC)/color-me.c
 LIB_OBJ       := $(LIB_SRC)/color-me.o
 LIB_HEADER    := $(LIB_SRC)/color-me.h
-LIB_OUT       := libcolor-melib.a
+LIB_OUT       := libcolor-me.a
 
 # --- Install paths ---
 PREFIX      := /usr/local
@@ -31,12 +31,12 @@ $(LIB_OUT): $(LIB_OBJ)
 # --- Install ---
 install: all
 	install -Dm644 $(LIB_OUT)    $(DESTDIR)$(LIB_DIR)/$(LIB_OUT)
-	install -Dm644 $(LIB_HEADER) $(DESTDIR)$(INCLUDE_DIR)/wexint.h
+	install -Dm644 $(LIB_HEADER) $(DESTDIR)$(INCLUDE_DIR)/color-me.h
 	
 # --- Uninstall ---
 uninstall: all
 	rm -r $(DESTDIR)$(LIB_DIR)/$(LIB_OUT)
-	rm -r $(DESTDIR)$(INCLUDE_DIR)/wexint.h
+	rm -r $(DESTDIR)$(INCLUDE_DIR)/color-me.h
 
 clean:
 	rm -r $(LIB_OBJ) $(LIB_OUT)
